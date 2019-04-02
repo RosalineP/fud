@@ -3,6 +3,12 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@rmwc/button": "^5.2.2",
+    "@rmwc/card": "^5.2.2",
+    "@rmwc/drawer": "^5.2.2",
+    "@rmwc/list": "^5.2.2",
+    "@rmwc/tabs": "^5.2.2",
+    "@rmwc/textfield": "^5.2.2",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
     "react-scripts": "2.1.8"

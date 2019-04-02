@@ -1,0 +1,36 @@
+https://atom.io/packages/tasks
+
+Later:
+  ☐ use okta for login authentication
+  Install:
+      ☐ maybe an issue in running npm i -g create-react-app
+      ☐ npm WARN checkPermissions Missing write access to /usr/local/lib/node_modules
+
+
+
+UI:
+  ☐ customize colors, blue and amber, using selector
+  ☐ mess with fonts
+  ☐ use icons
+  ☐ remove the padder
+
+
+On Fridge:
+  ✔ show grocery @done(2019-04-01 14:43) @project(On Fridge)
+  ☐ adding food should add food
+  ☐ clicking food buttons should do something
+  Cleaning code style:
+      ☐ create the 3 tabs using a map
+  Fridge UI:
+      ☐ foods should be horizontally listed
+
+
+
+
+Backup Info:
+  ☐ npm i @rmwc/button --save
+  ☐ npm i @rmwc/drawer --save
+  ☐ npm i @rmwc/list --save
+  ☐ npm i @rmwc/tabs --save
+  ☐ npm i @rmwc/card --save
+  ☐ npm i @rmwc/textfield --save
