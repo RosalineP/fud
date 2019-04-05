@@ -1,7 +1,10 @@
 https://atom.io/packages/tasks
+cd Documents/fud_app && npm start
 
 Later:
   ☐ use okta for login authentication
+  ☐ heroku for cloud hosting
+  ☐ getchu a favicon
   Install:
       ☐ maybe an issue in running npm i -g create-react-app
       ☐ npm WARN checkPermissions Missing write access to /usr/local/lib/node_modules
@@ -19,6 +22,8 @@ On Fridge:
   ✔ show grocery @done(2019-04-01 14:43) @project(On Fridge)
   ☐ adding food should add food
   ☐ clicking food buttons should do something
+  ☐ make something put something into the database
+  ☐ better way to componentDidMount?
   Cleaning code style:
       ☐ create the 3 tabs using a map
   Fridge UI:

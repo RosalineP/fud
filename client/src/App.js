@@ -1,6 +1,5 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
-import './index.css';
+import React, { Component } from 'react';
+import axios from "axios";
 
 // =========== rmwc styling =============================
 import { Button } from '@rmwc/button';
@@ -17,7 +16,7 @@ import '@material/drawer/dist/mdc.drawer.css';
 import {
   List,
   ListItem,
-  ListItemPrimaryText
+  // ListItemPrimaryText
 } from '@rmwc/list';
 import '@material/list/dist/mdc.list.css';
 
@@ -30,18 +29,18 @@ import '@material/tab-indicator/dist/mdc.tab-indicator.css';
 import { IconButton } from '@rmwc/icon-button';
 import '@material/icon-button/dist/mdc.icon-button.css';
 
-import { Icon } from '@rmwc/icon';
+// import { Icon } from '@rmwc/icon';
 import '@rmwc/icon/icon.css';
 
 import {
   Card,
   CardPrimaryAction,
-  CardMedia,
+  // CardMedia,
   CardActionButton,
-  CardActionIcon,
+  // CardActionIcon,
   CardActions,
   CardActionButtons,
-  CardActionIcons
+  // CardActionIcons
 } from '@rmwc/card';
 import '@material/card/dist/mdc.card.css';
 import '@material/button/dist/mdc.button.css';
@@ -54,16 +53,28 @@ import '@material/notched-outline/dist/mdc.notched-outline.css';
 import '@material/line-ripple/dist/mdc.line-ripple.css';
 // =======================================================
 
-class App extends React.Component{
+
+
+class App extends Component{
   constructor(props){
     super(props);
     this.state = {rightPanelView: "Frïdge"};
   }
 
+
+  componentDidMount() {
+    console.clear();
+  }
+
+  // do i need one of these lol
+  componentWillUnmount() {
+    console.log("wat")
+  }
+
   changeView(view){
     if (view === "Shöp"){
       this.setState({rightPanelView: "Shöp"});
-    } else if (view == "Frïdge") {
+    } else if (view === "Frïdge") {
       this.setState({rightPanelView: "Frïdge"});
     } else {
       this.setState({rightPanelView: "Rëcipe"});
@@ -74,7 +85,7 @@ class App extends React.Component{
     let infoPassed = this.state.rightPanelView; // stub
     if (view === "Shöp"){
       return <ShopView text = {infoPassed}/>;
-    } else if (view == "Frïdge") {
+    } else if (view === "Frïdge") {
       return <FridgeView text = {infoPassed}/>;
     } else {
       return <RecipeView text = {infoPassed}/>;
@@ -105,7 +116,7 @@ function SidebarListActivity(props){
   );
 }
 
-class Sidebar extends React.Component {
+class Sidebar extends Component {
   render() { return(
     <Drawer>
       <DrawerHeader>
@@ -124,7 +135,7 @@ class Sidebar extends React.Component {
 
 
 
-class ShopView extends React.Component{
+class ShopView extends Component{
   render(){
     return (
       <Button>{this.props.text} stuff</Button>
@@ -132,18 +143,43 @@ class ShopView extends React.Component{
   }
 }
 
-class FridgeView extends React.Component{
+class FridgeView extends Component{
   constructor(props){
     super(props);
-    this.state = {compartmentView: "fridge",
+    this.state = {ajaxData: "",
+                  data: "",
+                  compartmentView: "fridge",
                   showAddFood: false,
                   fridge:  [{"name": "peach", "date": "3/14"},
                             {"name": "meat", "date": "3/20"}],
                   pantry:  [{"name": "cereal", "date": "3/15"},
                             {"name": "tea", "date": "3/20"}],
-                  freezer:  [{"name": "chicken", "date": "3/14"}]
+                  freezer:  [{"name": "chicken", "date": "3/14"}],
+
+                  newFood: "",
+                  newCompartment: "",
+                  newDate:""
     };
+    this.addFoodToDB = this.addFoodToDB.bind(this);
   }
+
+
+  componentDidMount() {
+    this.getDataFromDb();
+  }
+  componentWillUnmount() {
+    this.setState({ ajaxData: "" });
+  }
+
+
+  getDataFromDb = () => {
+    fetch("http://localhost:3001/api/getData")
+      .then(data => data.json()) // response type
+      // .then(res => this.setState({ data: res.data })); //do stuff with data
+      .then(res => console.log(res.data ));
+
+  };
+
 
   // generate list of foods for a compartment
   foodListItem(compartment){
@@ -163,19 +199,42 @@ class FridgeView extends React.Component{
     return <div> {FoodList} </div>;
   }
 
+
   addFoodItem(){
     return     <Card outlined>
                 <CardPrimaryAction>
-                  <TextField label="Food Name"/>
-                  <TextField label="date" type="date"/>
+                    <TextField value={this.state.newFood}
+                               onChange={(e) => this.setState({newFood: e.currentTarget.value})}
+                               label="Food Name"/>
+                    <TextField value={this.state.newCompartment}
+                               onChange={(e) => this.setState({newCompartment: e.currentTarget.value})}
+                               label="Compartment"/>
+                    <TextField value={this.state.newDate}
+                               onChange={(e) => this.setState({newDate: e.currentTarget.value})}
+                               label="date"
+                               type="date"/>
                 </CardPrimaryAction>
                 <CardActions>
                   <CardActionButtons>
-                    <CardActionButton>Submit</CardActionButton>
+                    <CardActionButton onClick={this.addFoodToDB}>Submit</CardActionButton>
                     <CardActionButton>Cancel</CardActionButton>
                   </CardActionButtons>
                 </CardActions>
               </Card>
+  }
+
+  addFoodToDB(e){
+    console.log("name:");
+    console.log(this.state.newName);
+
+    axios.post("http://localhost:3001/api/putData", {
+      // compartment: this.state.newCompartment,
+      // name: this.state.newName,
+      // date: this.state.newDate.toString()
+      compartment: this.state.newCompartment,
+      name: this.state.newFood,
+      date: this.state.newDate
+    });
   }
 
   addFoodCardOpen(){
@@ -195,7 +254,9 @@ class FridgeView extends React.Component{
           <Tab onClick = {() => this.setState({compartmentView: "freezer"})} >Freezer</Tab>
         </TabBar>
         <div className = "rightFloat">
-        <IconButton icon="+" label="placeholder" onClick = {() => this.addFoodCardOpen()}/>
+
+            <IconButton icon="+" label="placeholder" onClick = {() => this.addFoodCardOpen()}/>
+
         </div>
         <div className = "foodList">
           {this.foodListItem(this.state.compartmentView)}
@@ -210,7 +271,7 @@ class FridgeView extends React.Component{
   }
 }
 
-class RecipeView extends React.Component{
+class RecipeView extends Component{
   render(){
     return (
       <Button>{this.props.text} stuff</Button>
@@ -222,8 +283,4 @@ class RecipeView extends React.Component{
 
 // ========================================
 
-ReactDOM.render(
-  // <ThemeProvider />,
-  <App />,
-  document.getElementById('root')
-);
+export default App;
