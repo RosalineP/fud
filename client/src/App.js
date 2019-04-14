@@ -51,6 +51,15 @@ import '@material/textfield/dist/mdc.textfield.css';
 import '@material/floating-label/dist/mdc.floating-label.css';
 import '@material/notched-outline/dist/mdc.notched-outline.css';
 import '@material/line-ripple/dist/mdc.line-ripple.css';
+
+import { Select } from '@rmwc/select';
+import '@material/select/dist/mdc.select.css';
+import '@material/floating-label/dist/mdc.floating-label.css';
+import '@material/notched-outline/dist/mdc.notched-outline.css';
+import '@material/line-ripple/dist/mdc.line-ripple.css';
+import '@material/list/dist/mdc.list.css';
+import '@material/menu/dist/mdc.menu.css';
+import '@material/menu-surface/dist/mdc.menu-surface.css';
 // =======================================================
 
 
@@ -157,15 +166,18 @@ class FridgeView extends Component{
                   freezer:  [{"name": "chicken", "date": "3/14"}],
 
                   newFood: "",
-                  newCompartment: "",
+                  newCompartment: "Fridge",
                   newDate:""
     };
     this.addFoodToDB = this.addFoodToDB.bind(this);
+    this.clearCloseFoodCard = this.clearCloseFoodCard.bind(this);
+    this.getDataFromDb = this.getDataFromDb.bind(this);
   }
 
 
   componentDidMount() {
     this.getDataFromDb();
+
   }
   componentWillUnmount() {
     this.setState({ ajaxData: "" });
@@ -175,8 +187,16 @@ class FridgeView extends Component{
   getDataFromDb = () => {
     fetch("http://localhost:3001/api/getData")
       .then(data => data.json()) // response type
-      // .then(res => this.setState({ data: res.data })); //do stuff with data
-      .then(res => console.log(res.data ));
+      .then(res => this.setState({freezer: res.data[2].foods})); //do stuff with data
+      
+
+      // .then(function (res){
+      //   // this.setState({pantry: res.data[0].foods})
+      //   // this.setState({fridge: res.data[1].foods})
+      //   // this.setState({freezer:res.data[2].foods})
+      // });
+
+
 
   };
 
@@ -206,40 +226,50 @@ class FridgeView extends Component{
                     <TextField value={this.state.newFood}
                                onChange={(e) => this.setState({newFood: e.currentTarget.value})}
                                label="Food Name"/>
-                    <TextField value={this.state.newCompartment}
-                               onChange={(e) => this.setState({newCompartment: e.currentTarget.value})}
-                               label="Compartment"/>
                     <TextField value={this.state.newDate}
                                onChange={(e) => this.setState({newDate: e.currentTarget.value})}
                                label="date"
                                type="date"/>
+                     <Select   value={this.state.newCompartment}
+                               onChange={(e) => this.setState({newCompartment: e.currentTarget.value})}
+                               label="Compartment"
+                               options={['Pantry', 'Fridge', 'Freezer']}/>
+
                 </CardPrimaryAction>
                 <CardActions>
                   <CardActionButtons>
                     <CardActionButton onClick={this.addFoodToDB}>Submit</CardActionButton>
-                    <CardActionButton>Cancel</CardActionButton>
+                    <CardActionButton onClick={this.clearCloseFoodCard}>Cancel</CardActionButton>
                   </CardActionButtons>
                 </CardActions>
               </Card>
   }
 
+
   addFoodToDB(e){
-    console.log("name:");
-    console.log(this.state.newName);
+    var self = this;
+    // console.log("name:");
+    // console.log(this.state.newFood);
 
     axios.post("http://localhost:3001/api/putData", {
-      // compartment: this.state.newCompartment,
-      // name: this.state.newName,
-      // date: this.state.newDate.toString()
       compartment: this.state.newCompartment,
       name: this.state.newFood,
       date: this.state.newDate
+    })
+    .then(function (response){
+      self.clearCloseFoodCard();
     });
   }
+
+
 
   addFoodCardOpen(){
       let setTo = this.state.showAddFood ? false : true;
       this.setState({showAddFood: setTo});
+  }
+
+  clearCloseFoodCard(){
+    this.setState({showAddFood:false, newFood: "", newCompartment: "", newDate:""})
   }
 
   render(){

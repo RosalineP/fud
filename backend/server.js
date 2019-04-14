@@ -48,30 +48,32 @@ router.get("/getData", (req, res) => {
 // this is our create methid
 // this method adds new data in our database
 router.post("/putData", (req, res) => {
-  let data = new Data();
   const { compartment, name, date } = req.body;
-  console.log(req.body); // : { compartment: 'cheese', name: 'ass', date: 'never' }
+  // console.log(req.body); // : { compartment: 'cheese', name: 'ass', date: 'never' }
 
   if ((!name && name !== 0) || !date) {
     return res.json({
       success: false,
       error: "INVALID INPUTS"
-    });
+    }); 
   }
 
-  var food = [];
-  food.push({})
-  data.compartment = compartment;
-  // data.foods.name = name;
-  // data.foods.date = date;
-  data.foods.push({name: name, date:date})
-
-
-  data.save(err => {
+  // var food = [];
+  // food.push({})
+  // data.compartment = compartment;
+  // data.foods.push({name: name, date:date})
+  var food = {"name": name, "date": date};
+  Data.findOneAndUpdate({compartment: compartment}, {$push: {foods: food}}, err =>{
     if (err) return res.json({ success: false, error: err });
-    console.log("successful new food save")
     return res.json({ success: true });
-  });
+  })
+
+  // Data.save(err => {
+  //   if (err) return res.json({ success: false, error: err });
+  //   console.log("successful new food save")
+  //   return res.json({ success: true });
+  //
+  // });
 });
 
 

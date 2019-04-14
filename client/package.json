@@ -7,6 +7,7 @@
     "@rmwc/card": "^5.2.2",
     "@rmwc/drawer": "^5.2.2",
     "@rmwc/list": "^5.2.2",
+    "@rmwc/select": "^5.3.1",
     "@rmwc/tabs": "^5.2.2",
     "@rmwc/textfield": "^5.2.2",
     "axios": "^0.18.0",
