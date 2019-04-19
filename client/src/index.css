@@ -1,11 +1,147 @@
-.leftFloat {
-    float: left;
+body {
+  margin: 0;
+  padding: 0;
 }
 
-.rightFloat {
-    float: right;
+/* ==================   Sidepanel   ================== */
+
+.umlaut{
+  font-size: 3.5em;
+  color: #a4de02;
+  text-align: center;
+  border-bottom: medium dotted #a4de02;
 }
 
-.padder{
-  padding: 5px;
+.navBar{
+  float: left;
+  width: 6em;
+  height: 100vh;
+  border-right: medium dashed #a4de02;
 }
+
+.navIcon{
+  height: 14vh;
+  width: 100%;
+  text-align: center;
+  border-color: black;
+  /* border-radius: 75px; */
+  /* border-style: solid; */
+}
+
+.icon{
+  color: #a4de02;
+  padding: 0;
+  border-color: red;
+  /* border-style: solid; */
+}
+
+.sidebarNavLink{
+  margin-top: 2vh;
+  border-color: purple;
+  /* border-style: solid; */
+}
+
+.navIcon:hover{
+  background-color: #a4de02;
+}
+.navIcon:hover .icon{
+  color: white;
+}
+
+
+/* ==================   Fridge   ================== */
+.fridgeCompartmentView{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.fridgeButtonGroup{
+  margin: 7vh auto 0 auto;
+}
+
+.fridgeBtnGroup {
+  background: white;
+  color: #a4de02;
+  border: 2px solid #a4de02;
+  padding: 5px 10px;
+  font-size: 1.2em;
+}
+.fridgeBtnGroupLeft   { border-radius: 10px 0px 0px 10px; }
+.fridgeBtnGroupMiddle { border-width:  2px 0px 2px 0px; }
+.fridgeBtnGroupRight  { border-radius: 0px 10px 10px 0px; }
+.fridgeBtnGroup:focus {
+  outline: none;
+}
+
+.fridgeAddIcon{
+  margin-top: 10px;
+  margin-left: 10px;
+}
+
+.fridgeTable{
+  margin-top: 4vh;
+  width: 75vw;
+}
+
+.ftHeader{
+  margin-top: 6vh;
+  border-bottom: 5px dashed #FED833;
+  font-weight: bold;
+  padding-bottom: 0.5em;
+  color: #577504;
+}
+
+.ftRow{
+  display: flex;
+  align-items: center;
+  width: 75vw;
+  margin-top: 0.5em;
+  margin-bottom: 0.5em;
+  color: #92c10f;
+}
+
+.ftCell{
+  box-sizing: border-box;
+  flex-grow: 1;
+  width: 100%;
+  overflow: hidden;
+  /* text-align: center; */
+  /* border: 1px solid black; */
+}
+
+
+.checkmarkCell{
+  width: 5%;
+}
+.iconCell{
+  width: 30%;
+  text-align: center;
+  color: #ADA842;
+}
+.nameCell{
+  width: 45%;
+}
+.expiryCell{
+  width: 25%;
+}
+.quantityCell{
+  width: 35%;
+  text-align: center;
+}
+.unitCell{
+  width: 30%;
+  text-align: center;
+}
+
+.foodItem{
+  /* width: 20vw; */
+  border: 2px solid #a4de02;
+  border-radius: 5px;
+}
+
+.foodIcon{
+  height: 2.5em;
+  width:  2.5em;
+}
+/* ==================              ================== */
