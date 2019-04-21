@@ -3,6 +3,26 @@ body {
   padding: 0;
 }
 
+.noHighlight {
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+.greenButton{
+  background: white;
+  color: #a4de02;
+  border: 2px solid #a4de02;
+  padding: 5px 10px;
+  font-size: 1.2em;
+}
+.greenButton:focus {
+  outline: none;
+}
+
 /* ==================   Sidepanel   ================== */
 
 .umlaut{
@@ -12,7 +32,16 @@ body {
   border-bottom: medium dotted #a4de02;
 }
 
+.leftPanel{
+  width: 6em;
+  height:100vh;
+  float: left;
+}
+
 .navBar{
+  position: fixed;
+  display: flex;
+  flex-direction: column;
   float: left;
   width: 6em;
   height: 100vh;
@@ -48,8 +77,21 @@ body {
   color: white;
 }
 
+.loginout{
+  border-radius: 10px;
+  margin: 0 5px 0 7px;
+  font-size: 1.1em;
+  position: absolute;
+  bottom: 1em;
+}
+.loginout:hover{
+  background-color: #a4de02;
+  color: white;
+}
+
 
 /* ==================   Fridge   ================== */
+/*   Button Group Nav   */
 .fridgeCompartmentView{
   display: flex;
   flex-direction: column;
@@ -57,28 +99,97 @@ body {
 }
 
 .fridgeButtonGroup{
-  margin: 7vh auto 0 auto;
+  margin: 5vh auto 0 auto;
 }
 
-.fridgeBtnGroup {
-  background: white;
-  color: #a4de02;
-  border: 2px solid #a4de02;
-  padding: 5px 10px;
-  font-size: 1.2em;
-}
 .fridgeBtnGroupLeft   { border-radius: 10px 0px 0px 10px; }
 .fridgeBtnGroupMiddle { border-width:  2px 0px 2px 0px; }
 .fridgeBtnGroupRight  { border-radius: 0px 10px 10px 0px; }
-.fridgeBtnGroup:focus {
-  outline: none;
-}
 
 .fridgeAddIcon{
   margin-top: 10px;
   margin-left: 10px;
 }
 
+/*   Popover Content   */
+.popOverContent{
+  width: 15em;
+  position:absolute;
+  top:-15px;
+  right:-255px;
+  visibility: visible;
+  border: 3px solid #a4de02;
+  border-radius: 10px;
+  padding-top: 1em;
+  padding-bottom: 1em;
+  background-color: white;
+
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+}
+
+.textFieldNotification{
+  font-size: 0.7em;
+  color: #FF7C0A;
+}
+.popOverField{
+  margin-top: 0.5em;
+  margin-bottom: 0.5em;
+  border: 2px solid #a4de02;
+  border-radius: 5px;
+  height: 44px;
+  width: 175px;
+}
+.popOverField:focus {
+  outline: none;
+}
+
+input, select, textarea{
+    color: #808080;
+    text-indent: 5px;
+}
+
+.popOverSelect{
+  width: 175px;
+  height: 43px;
+}
+
+.optional{
+  color: #a4de02;
+  font-size: 0.7em;
+}
+
+.popOverQuantitiesText{
+  width: 83px;
+  margin: 0 5px 0 0;
+  margin-top: 0.5em;
+}
+
+.popOverQuantitySelect{
+  width: 88px;
+  height: 45px;
+  float: right;
+}
+
+.popOverSubmitButton{
+  background: white;
+  color: #FED833;
+  border: 2px solid #FED833;
+  padding: 5px 10px;
+  font-size: 1.2em;
+  border-radius: 10px;
+  margin-top: 0.5em;
+}
+.popOverSubmitButton:hover{
+  background: #FED833;
+  color: white;
+}
+.popOverSubmitButton:focus {
+  outline: none;
+}
+
+/*   Food Table   */
 .fridgeTable{
   margin-top: 4vh;
   width: 75vw;
@@ -110,9 +221,13 @@ body {
   /* border: 1px solid black; */
 }
 
+.foodIcon{
+  height: 2.5em;
+  width:  2.5em;
+}
 
 .checkmarkCell{
-  width: 5%;
+  width: 3em;
 }
 .iconCell{
   width: 30%;
@@ -134,14 +249,4 @@ body {
   text-align: center;
 }
 
-.foodItem{
-  /* width: 20vw; */
-  border: 2px solid #a4de02;
-  border-radius: 5px;
-}
-
-.foodIcon{
-  height: 2.5em;
-  width:  2.5em;
-}
 /* ==================              ================== */
