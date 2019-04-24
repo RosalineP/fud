@@ -130,12 +130,14 @@ body {
 }
 
 .textFieldNotification{
+  /* margin-top: 0.5em; */
   font-size: 0.7em;
   color: #FF7C0A;
+  height: 1.5em;
 }
 .popOverField{
-  margin-top: 0.5em;
-  margin-bottom: 0.5em;
+  /* margin-top: 0.5em; */
+  margin-bottom: 0.2em;
   border: 2px solid #a4de02;
   border-radius: 5px;
   height: 44px;
@@ -156,19 +158,21 @@ input, select, textarea{
 }
 
 .optional{
+  margin-top: 1em;
   color: #a4de02;
   font-size: 0.7em;
 }
 
 .popOverQuantitiesText{
-  width: 83px;
-  margin: 0 5px 0 0;
-  margin-top: 0.5em;
+  width: 82px;
+  float: left;
+  margin-right: 7px;
+  /* margin: 0 5px 0 0; */
+  /* margin-top: 0.5em; */
 }
 
-.popOverQuantitySelect{
-  width: 88px;
-  height: 45px;
+.popOverUnitSelect{
+  width: 87px;
   float: right;
 }
 
@@ -179,7 +183,7 @@ input, select, textarea{
   padding: 5px 10px;
   font-size: 1.2em;
   border-radius: 10px;
-  margin-top: 0.5em;
+  margin-top: 1em;
 }
 .popOverSubmitButton:hover{
   background: #FED833;

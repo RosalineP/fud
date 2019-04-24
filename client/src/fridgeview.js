@@ -6,13 +6,13 @@ import blueberry from './blueberries.svg'
 import Button from 'react-bootstrap/Button'
 import ButtonGroup from 'react-bootstrap/ButtonGroup'
 // import Popover from 'react-bootstrap/Popover'
-import OverlayTrigger from 'react-bootstrap/OverlayTrigger'
-import Form from 'react-bootstrap/Form'
+// import OverlayTrigger from 'react-bootstrap/OverlayTrigger'
+// import Form from 'react-bootstrap/Form'
 
-import Popover, { ArrowContainer } from 'react-tiny-popover'
+// import Popover, { ArrowContainer } from 'react-tiny-popover'
 
-import DayPicker from 'react-day-picker';
-import DayPickerInput from 'react-day-picker/DayPickerInput';
+// import DayPicker from 'react-day-picker';
+// import DayPickerInput from 'react-day-picker/DayPickerInput';
 import 'react-day-picker/lib/style.css';
 
 import Select from 'react-select';
@@ -46,7 +46,7 @@ class FridgeView extends Component{
 class FridgeButtonGroup extends Component{
   constructor(props){
     super(props);
-    this.state = {isPopOverOpen: true};
+    this.state = {isPopOverOpen: false};
   }
 
   render(){
@@ -83,18 +83,34 @@ class AddFood extends Component{
                   selectedOptionUnit: null,
                   priceField: "",
 
-                  nameField: "",
-                  expiryField: "",
-                  selectedOptionCompartment: null,
-                  quantityField: "",
-                  selectedOptionUnit: null,
-                  priceField: "",
+                  nameFieldWarning: "",
+                  expiryFieldWarning: "",
+                  selectedOptionCompartmentWarning: null,
+                  quantityFieldWarning: "",
+                  priceFieldWarning: "",
+                  anyWarnings: false
                 };
     this.handleChangeTextField = this.handleChangeTextField.bind(this);
   }
 
+  addFoodToDB(e){
+    if (this.validateAddFoodFields()){
+      var self = this;
+      axios.post("http://localhost:3001/api/addFood", {
+        name: self.state.nameField,
+        expiry: self.state.expiryField,
+        compartment: self.state.selectedOptionCompartment.value
+      })
+      .then(function (response){
+        console.log("card closes")
+        console.log(response)
+      });
+    }
+  }
+
   handleChangeTextField(event, stateName){
     this.setState({[stateName]: event.target.value})
+    // console.log(this.state);
   }
   handleChangeCompartment = (selectedOptionCompartment) => {
     this.setState({ selectedOptionCompartment });
@@ -106,18 +122,45 @@ class AddFood extends Component{
   }
 
 
-  validateAddFoodFields(){
-
+validateOneField(warningMessage, badComparator, fieldName){
+  let fieldWarningName = fieldName + "Warning";
+  if (this.state[fieldName] === badComparator){
+    this.setState({[fieldWarningName]: warningMessage});
+    return false;
+  } else if (this.state[fieldName] !== badComparator){
+    this.setState({ [fieldWarningName] : ""});
+    return true;
   }
+}
 
-  addFoodToDB(e){
-    var self = this;
-    let arr = [self.state.nameField,
-               self.state.expiryField,
-               self.state.selectedOptionCompartment.value]
-    console.log(arr);
+validateOneOptionalField(warningMessage, fieldName, price){
+  let fieldWarningName = fieldName + "Warning";
+  if (this.state[fieldName] !== "" && isNaN(price)){
+    this.setState({[fieldWarningName]: warningMessage})
+    return false;
+  } else if (this.state[fieldName] !== "" && !isNaN(price)) {
+    this.setState({[fieldWarningName] : ""});
+    return true;
+  } else if (this.state[fieldName] === ""){
+    this.setState({[fieldWarningName] : ""});
+    return true;
+  }
+}
 
+  // returns true if inputs are valid
+  validateAddFoodFields(){
+    let emptinessWarning = "required field"
+    let notNumber = "must be numerical"
 
+    let nameField = this.validateOneField(emptinessWarning, "", "nameField");
+    let expiryField = this.validateOneField("fuck gotta write this", "", "expiryField");
+    let selectedOptionCompartment = this.validateOneField(emptinessWarning, null, "selectedOptionCompartment");
+
+    let priceField = this.validateOneOptionalField(notNumber, "priceField",  parseFloat(this.state.priceField))
+    let quantityField = this.validateOneOptionalField(notNumber, "quantityField",  parseFloat(this.state.quantityField))
+
+    var validInputs = (nameField && expiryField && selectedOptionCompartment && priceField && quantityField)
+    return validInputs;
   }
 
   render(){
@@ -159,54 +202,27 @@ class AddFood extends Component{
     return(
       <div className="popOverContent">
 
-        <input type="text"
-               value={this.state.nameField}
-               onChange={(e) => this.handleChangeTextField(e, "nameField")}
-               className="popOverField"
-               placeholder=" name "/>
+        <TextField onChange={(e) => this.handleChangeTextField(e, "nameField")}
+                   value={this.state.nameField}
+                   className={"popOverField"}
+                   placeholder="name"
+                   warning={this.state.nameFieldWarning}/>
 
-        <input type="text"
-               value={this.state.expiryField}
-               onChange={(e) => this.handleChangeTextField(e, "expiryField")}
-               className="popOverField"
-               placeholder=" expiry "/>
+        <TextField onChange={(e) => this.handleChangeTextField(e, "expiryField")}
+                  value={this.state.expiryField}
+                  className={"popOverField"}
+                  placeholder="expiry &nbsp; [mm/dd]"
+                  warning={this.state.expiryFieldWarning}/>
 
-        <Select
-          className="popOverField popOverSelect"
-          value={selectedOptionCompartment}
-          onChange={this.handleChangeCompartment}
-          options={optionsCompartment}
-          styles={styleFocus}
-          placeholder="compartment"
-          theme={(theme) => ({
-            ...theme,
-            borderRadius: 0,
-            colors: {
-            ...theme.colors,
-              primary25: '#A0C778',
-              primary: '#FED833',
-            },
-          })}
-        />
-
-        <div className="optional">
-          - optional -
-        </div>
-
-        <div>
-          <input type="text"
-                 value={this.state.quantityField}
-                 onChange={(e) => this.handleChangeTextField(e, "quantityField")}
-                 className="popOverField popOverQuantitiesText"
-                 placeholder=" quantity "/>
-
+        <span>
+          <div className="textFieldNotification"> {this.state.selectedOptionCompartmentWarning} </div>
           <Select
-            className="popOverField popOverQuantitySelect"
-            value={selectedOptionUnit}
-            onChange={this.handleChangeUnits}
-            options={optionsUnit}
+            className="popOverField popOverSelect"
+            value={selectedOptionCompartment}
+            onChange={this.handleChangeCompartment}
+            options={optionsCompartment}
             styles={styleFocus}
-            placeholder="unit"
+            placeholder="compartment"
             theme={(theme) => ({
               ...theme,
               borderRadius: 0,
@@ -217,13 +233,43 @@ class AddFood extends Component{
               },
             })}
           />
+        </span>
+
+        <div className="optional">
+          - optional -
         </div>
 
-        <input type="text"
-               value={this.state.priceField}
-               onChange={(e) => this.handleChangeTextField(e, "priceField")}
-               className="popOverField"
-               placeholder=" price (optional) "/>
+        <div>
+          <TextField onChange={(e) => this.handleChangeTextField(e, "quantityField")}
+                     value={this.state.quantityField}
+                     className="popOverField popOverQuantitiesText"
+                     placeholder="quantity"
+                     warning={this.state.quantityFieldWarning}/>
+
+             <Select
+              className="popOverField popOverUnitSelect"
+              value={selectedOptionUnit}
+              onChange={this.handleChangeUnits}
+              options={optionsUnit}
+              styles={styleFocus}
+              placeholder="unit"
+              theme={(theme) => ({
+                ...theme,
+                borderRadius: 0,
+                colors: {
+                ...theme.colors,
+                  primary25: '#A0C778',
+                  primary: '#FED833',
+                },
+              })}
+            />
+        </div>
+
+        <TextField onChange={(e) => this.handleChangeTextField(e, "priceField")}
+                   value={this.state.priceField}
+                   className="popOverField"
+                   placeholder="price (optional)"
+                   warning={this.state.priceFieldWarning}/>
 
         <Button bsPrefix="popOverSubmitButton" onClick={(e) => this.addFoodToDB(e)}> submit </Button>
 
@@ -232,9 +278,66 @@ class AddFood extends Component{
   }
 }
 
+class TextField extends Component{
+  render(){
+    return(
+      <span>
+        <div className="textFieldNotification"> {this.props.warning} </div>
+        <input type="text"
+               value={this.props.nameField}
+               onChange={this.props.onChange}
+               className={this.props.className}
+               placeholder={this.props.placeholder}/>
+      </span>
+    );
+  }
+}
 
 
 class FoodTable extends Component{
+  constructor(props){
+    super(props);
+    this.state = {foodData: null};
+  }
+
+  componentDidMount(){
+    this.getFoods();
+  }
+  componentWillUnmount() {
+  }
+
+
+  getFoods(){
+    fetch("http://localhost:3001/api/getFood")
+      .then(data => data.json()) // response type
+      .then(res => this.setState({foodData: res.data})) //do stuff with data
+      // .then(res => this.setState({freezer: res.data[2].foods,
+      //                             fridge: res.data[1].foods,
+      //                             pantry: res.data[0].foods})) //do stuff with data
+  };
+
+
+  generateFoodRows(){
+    let data = this.state.foodData;
+    // const FoodRows = data.map((food) =>
+    //   <FoodRow key="{food._id}" nameCell={food.name} expiryCell="{food.expiry}" quantityCell="" unitCell=""/>
+    // );
+    console.log("eh")
+    console.log(data)
+
+    // var i;
+    // for (i in data){
+    //   console.log( data[i].name)
+    //   console.log( data[i].expiry)
+    //   console.log( data[i].compartment)
+    //   console.log( data[i]._id)
+    //   console.log( data[i].unitCell)
+    //   console.log("")
+    // }
+
+    // return <div> {FoodRows} </div>;
+  }
+
   render(){
     return(
       <div className="fridgeTable noHighlight">
@@ -246,7 +349,7 @@ class FoodTable extends Component{
           <div className="ftCell quantityCell"> quantity </div>
           <div className="ftCell unitCell"> unit </div>
         </div>
-        <FoodRow/>
+        {this.generateFoodRows()}
       </div>
     );
   }
@@ -275,10 +378,10 @@ class FoodRow extends Component{
     return( <div className="ftRow">
               <div className="ftCell checkmarkCell" onClick={() => this.setState({checked: !this.state.checked})}> {checkBox} </div>
               <div className="ftCell iconCell"> <img className="foodIcon" src={blueberry} alt="food icon" /> </div>
-              <div className="ftCell nameCell"> blueberries </div>
-              <div className="ftCell expiryCell"> 3/18/19 </div>
-              <div className="ftCell quantityCell"> 1 </div>
-              <div className="ftCell unitCell"> box </div>
+              <div className="ftCell nameCell"> {this.props.nameCell} </div>
+              <div className="ftCell expiryCell"> {this.props.expiryCell} </div>
+              <div className="ftCell quantityCell"> {this.props.quantityCell} </div>
+              <div className="ftCell unitCell"> {this.props.unitCell} </div>
             </div>
             );
   }
