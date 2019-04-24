@@ -37,7 +37,7 @@ class FridgeView extends Component{
       <div className="fridgeCompartmentView">
         <FridgeButtonGroup selection={this.state.compartmentSelection}
                            onClickButton={(newSelection) => this.setState({compartmentSelection: newSelection})}/>
-        <FoodTable />
+        <FoodTable compartmentSelection={this.state.compartmentSelection}/>
       </div>
     );
   }
@@ -297,7 +297,8 @@ class TextField extends Component{
 class FoodTable extends Component{
   constructor(props){
     super(props);
-    this.state = {foodData: null};
+    this.state = {foodData: ""};
+    // this.getFoods = this.getFoods.bind(this);
   }
 
   componentDidMount(){
@@ -310,32 +311,19 @@ class FoodTable extends Component{
   getFoods(){
     fetch("http://localhost:3001/api/getFood")
       .then(data => data.json()) // response type
-      .then(res => this.setState({foodData: res.data})) //do stuff with data
-      // .then(res => this.setState({freezer: res.data[2].foods,
-      //                             fridge: res.data[1].foods,
-      //                             pantry: res.data[0].foods})) //do stuff with data
+      .then(res => this.setState({foodData: res.data}))
   };
-
 
   generateFoodRows(){
     let data = this.state.foodData;
-    // const FoodRows = data.map((food) =>
-    //   <FoodRow key="{food._id}" nameCell={food.name} expiryCell="{food.expiry}" quantityCell="" unitCell=""/>
-    // );
-    console.log("eh")
+    if (data === ""){
+      return
+    }
     console.log(data)
-
-    // var i;
-    // for (i in data){
-    //   console.log( data[i].name)
-    //   console.log( data[i].expiry)
-    //   console.log( data[i].compartment)
-    //   console.log( data[i]._id)
-    //   console.log( data[i].unitCell)
-    //   console.log("")
-    // }
-
-    // return <div> {FoodRows} </div>;
+    const FoodRows = data.map((food) =>
+      (food.compartment === this.props.compartmentSelection ? <FoodRow key={food._id} nameCell={food.name} expiryCell={food.expiry} quantityCell="" unitCell=""/> : "")
+    );
+    return <div> {FoodRows} </div>;
   }
 
   render(){
