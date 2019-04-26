@@ -196,7 +196,10 @@ input, select, textarea{
 /*   Food Table   */
 .fridgeTable{
   margin-top: 4vh;
+  /* margin-right: 4em; */
   width: 75vw;
+  /* border: 1px solid black; */
+
 }
 
 .ftHeader{
@@ -253,4 +256,34 @@ input, select, textarea{
   text-align: center;
 }
 
+/*   Food Table   */
+.foodActionsBar{
+  display: flex;
+  flex-direction: column;
+  float: right;
+  position:absolute;
+  top: 5em;
+  right: 1.5em;
+
+  /* border: 1px solid black; */
+}
+
+
+.foodAction{
+  height: 3.9em;
+  width: 3.9em;
+  /* color: #C0C5CE; */
+  /* border: 3px dotted #C0C5CE; */
+  border-radius: 4em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 1em 0 1em 0;
+}
+
+
+.foodAction:hover{
+  color: #a4de02;
+  border: 3px solid #a4de02;
+}
 /* ==================              ================== */

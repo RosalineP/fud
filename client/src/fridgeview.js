@@ -15,7 +15,8 @@ import ButtonGroup from 'react-bootstrap/ButtonGroup'
 // import DayPickerInput from 'react-day-picker/DayPickerInput';
 import 'react-day-picker/lib/style.css';
 
-import Select from 'react-select';
+// import Select from 'react-select';
+import Select, { components } from 'react-select';
 
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -32,6 +33,7 @@ class FridgeView extends Component{
   }
 
 
+
   render(){
     return(
       <div className="fridgeCompartmentView">
@@ -39,6 +41,7 @@ class FridgeView extends Component{
                            onClickButton={(newSelection) => this.setState({compartmentSelection: newSelection})}/>
         <FoodTable compartmentSelection={this.state.compartmentSelection}/>
       </div>
+
     );
   }
 }
@@ -293,20 +296,20 @@ class TextField extends Component{
   }
 }
 
-
 class FoodTable extends Component{
   constructor(props){
     super(props);
-    this.state = {foodData: ""};
-    // this.getFoods = this.getFoods.bind(this);
+    this.state = {foodData: "",
+                  checkedFoods: new Set()};
+    this.getFoods = this.getFoods.bind(this);
   }
 
   componentDidMount(){
     this.getFoods();
+    // console.log("mounting")
   }
   componentWillUnmount() {
   }
-
 
   getFoods(){
     fetch("http://localhost:3001/api/getFood")
@@ -314,21 +317,65 @@ class FoodTable extends Component{
       .then(res => this.setState({foodData: res.data}))
   };
 
+  reportFoodChecked(id){
+    let oldSet = this.state.checkedFoods
+    let newSet;
+    if (oldSet.has(id)){
+      oldSet.delete(id)
+      newSet = oldSet
+    } else {
+      newSet = oldSet.add(id)
+    }
+    this.setState({checkedFoods: newSet})
+    // console.log("set: ")
+    // console.log(newSet)
+  }
+
   generateFoodRows(){
     let data = this.state.foodData;
     if (data === ""){
       return
     }
-    console.log(data)
+    // console.log(data)
     const FoodRows = data.map((food) =>
-      (food.compartment === this.props.compartmentSelection ? <FoodRow key={food._id} nameCell={food.name} expiryCell={food.expiry} quantityCell="" unitCell=""/> : "")
+      (food.compartment === this.props.compartmentSelection ?
+                            <FoodRow key={food._id}
+                                     onClickReportId={() => this.reportFoodChecked(food._id)}
+                                     isChecked={this.state.checkedFoods.has(food._id)}
+                                     nameCell={food.name}
+                                     expiryCell={food.expiry}
+                                     quantityCell=""
+                                     unitCell=""/> : "")
     );
     return <div> {FoodRows} </div>;
+  }
+
+  foodActionStyles(){
+    let activeStyle = {
+      color: "#a4de02",
+      border: "3px solid #a4de02",
+      cursor: "pointer"
+    };
+    let disabledStyle = {
+      color: "#C0C5CE",
+      border: "3px dotted #C0C5CE"
+    }
+
+    let currentChecks = this.state.checkedFoods;
+    if (currentChecks.size === 0){
+      return disabledStyle
+    } else {
+      return activeStyle
+    }
   }
 
   render(){
     return(
       <div className="fridgeTable noHighlight">
+        <FoodActionsBar actionStyle={this.foodActionStyles()}
+                        isActive={(this.state.checkedFoods.size > 0).toString()}
+                        checkedFoods={this.state.checkedFoods}
+                        refreshAfterDelete={this.getFoods}/>
         <div className="ftRow ftHeader">
           <div className="ftCell checkmarkCell"> <FontAwesomeIcon className="icon" icon='check' size="lg"/> </div>
           <div className="ftCell iconCell"> &nbsp; </div>
@@ -343,17 +390,24 @@ class FoodTable extends Component{
   }
 }
 
-
 class FoodRow extends Component{
   constructor(props){
     super(props);
-    this.state = {checked: true,
+    this.state = {checked: this.props.isChecked,
                   name: "",
                   expiry: "",
                   quantity: "",
                   unit: ""
                 };
+
     }
+
+  tickBox(){
+    let currentCheckBox = this.state.checked;
+    this.props.onClickReportId()
+    this.setState({checked: !this.state.checked})
+
+  }
 
   render(){
     let checkBox;
@@ -363,8 +417,9 @@ class FoodRow extends Component{
       checkBox = <FontAwesomeIcon className="icon" icon={['far', 'square']} size="lg"/>;
     }
 
+
     return( <div className="ftRow">
-              <div className="ftCell checkmarkCell" onClick={() => this.setState({checked: !this.state.checked})}> {checkBox} </div>
+              <div className="ftCell checkmarkCell" onClick={() => this.tickBox()}> {checkBox} </div>
               <div className="ftCell iconCell"> <img className="foodIcon" src={blueberry} alt="food icon" /> </div>
               <div className="ftCell nameCell"> {this.props.nameCell} </div>
               <div className="ftCell expiryCell"> {this.props.expiryCell} </div>
@@ -372,6 +427,32 @@ class FoodRow extends Component{
               <div className="ftCell unitCell"> {this.props.unitCell} </div>
             </div>
             );
+  }
+}
+
+class FoodActionsBar extends Component{
+
+  deleteFood(){
+    if (this.props.isActive === "true"){
+      let arrChecked = Array.from(this.props.checkedFoods)
+
+      axios.delete("http://localhost:3001/api/deleteFood", {
+        data: {
+          ids: arrChecked
+        }
+      }).then(res => this.props.refreshAfterDelete());
+    }
+  }
+
+  render(){
+    return(
+      <div className="foodActionsBar">
+        <div className="foodAction" style={this.props.actionStyle} onClick={() => this.deleteFood()}> eat </div>
+        <div className="foodAction" style={this.props.actionStyle} onClick={() => this.deleteFood()}> expire </div>
+        <div className="foodAction" style={this.props.actionStyle}> edit </div>
+      </div>
+
+    );
   }
 }
 

@@ -1,43 +1,35 @@
 https://atom.io/packages/tasks
 fn cmd d
 
-Later:
+Super stretch:
   ☐ use okta for login authentication
-  ☐ heroku for cloud hosting
-  ☐ getchu a favicon
-  Install:
-      ☐ maybe an issue in running npm i -g create-react-app
-      ☐ npm WARN checkPermissions Missing write access to /usr/local/lib/node_modules
-
 
 
 UI:
-  ☐ customize colors, blue and amber, using selector
-  ☐ mess with fonts
-  ☐ use icons
-  ☐ remove the padder
+  ☐ css styling should be camelcased
 
+On App:
+  ☐ think about how to indicate which tab you're on as well as styling for selecting others
+  ☐ have the text 'recipe, fridge, shop'
 
 On Fridge:
-  ✔ show grocery @done(2019-04-01 14:43) @project(On Fridge)
-  ✔ adding food should add food @done(2019-04-04 18:58) @project(On Fridge)
-  ✔ make something put something into the database @done(2019-04-04 18:58) @project(On Fridge)
-  ✔ close + clear newfood upon cancel or submit @done(2019-04-04 19:45) @project(On Fridge)
-  ☐ figure out how to add to database item
-  ☐ clicking food buttons should do something
-  ☐ better way to componentDidMount?
+  New:
+    ☐ check one or multiple food items. thing appears at bottom showing you options on what you can do..
+      or, it's greyed out until you check something
+    ☐ think of how to visually differentiate the optional ones
+    ☐ clean up selector code in addfood
+    ☐ make sure all functions aren't arrowy
+    ☐ make validation for dates work :(
+    ☐ make foodpopover close on outside click: https://medium.com/@pitipatdop/little-neat-trick-to-capture-click-outside-react-component-5604830beb7f
+    ☐ make sure right action panel doesn't overlap with the food table
+    ☐ adding food dropdown should default to last compartment added to
+    ☐ uninstall unused packages
+
+  Stretch:
+  ☐ warnings on soon to expire food
+  ☐ getting auto-categories for foods entered
+  ☐ getting images in selector in addfood
   Cleaning code style:
-      ☐ create the 3 tabs using a map
+      ☐
   Fridge UI:
-      ☐ foods should be horizontally listed
-
-
-
-
-Backup Info:
-  ☐ npm i @rmwc/button --save
-  ☐ npm i @rmwc/drawer --save
-  ☐ npm i @rmwc/list --save
-  ☐ npm i @rmwc/tabs --save
-  ☐ npm i @rmwc/card --save
-  ☐ npm i @rmwc/textfield --save
+      ☐

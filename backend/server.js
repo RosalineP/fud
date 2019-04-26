@@ -4,6 +4,7 @@ const express = require("express");
 var cors = require('cors');
 const bodyParser = require("body-parser");
 const logger = require("morgan");
+const FridgeFood = require("./fridgeFood");
 const Data = require("./data");
 
 const API_PORT = 3001;
@@ -11,10 +12,8 @@ const app = express();
 app.use(cors());
 const router = express.Router();
 
-// this is our MongoDB database
 const dbRoute = "mongodb+srv://user1:kirbsftwo3o@fudcluster-lpg62.mongodb.net/fud_db?retryWrites=true";
 
-// connects our back end code with the database
 mongoose.connect(
   dbRoute,
   { useNewUrlParser: true }
@@ -24,65 +23,52 @@ let db = mongoose.connection;
 
 db.once("open", () => console.log("connected to the database"));
 
-// checks if connection with the database is successful
 db.on("error", console.error.bind(console, "MongoDB connection error:"));
 
-// (optional) only made for logging and
-// bodyParser, parses the request body to be a readable json format
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(logger("dev"));
 
 
-// =======================================================
+// ===================== fridgeView ==============================
 
-// this is our get method
-// this method fetches all available data in our database
-router.get("/getData", (req, res) => {
-  Data.find((err, data) => {
+
+router.post("/addFood", (req, res) => {
+  const { name, expiry, compartment } = req.body;
+
+  var newFood = new FridgeFood({
+    name: name,
+    expiry: expiry,
+    compartment: compartment
+  });
+
+  newFood.save(err => {
+    if (err) return res.json({ success: false, error: err });
+    console.log("successful new food save")
+    return res.json({ success: true });
+
+  });
+});
+
+
+router.get("/getFood", (req, res) => {
+  // FridgeFood.find({compartment: "fridge"}, (err, data) => {
+  FridgeFood.find((err, data) => {
     if (err) return res.json({ success: false, error: err });
     return res.json({ success: true, data: data });
   });
 });
 
-// this is our create methid
-// this method adds new data in our database
-router.post("/putData", (req, res) => {
-  const { compartment, name, date } = req.body;
-  // console.log(req.body); // : { compartment: 'cheese', name: 'ass', date: 'never' }
-
-  if ((!name && name !== 0) || !date) {
-    return res.json({
-      success: false,
-      error: "INVALID INPUTS"
-    }); 
-  }
-
-  // var food = [];
-  // food.push({})
-  // data.compartment = compartment;
-  // data.foods.push({name: name, date:date})
-  var food = {"name": name, "date": date};
-  Data.findOneAndUpdate({compartment: compartment}, {$push: {foods: food}}, err =>{
-    if (err) return res.json({ success: false, error: err });
+router.delete("/deleteFood", (req, res) => {
+  const { ids } = req.body;
+  FridgeFood.deleteMany({ _id: { $in: ids}}, err => {
+    if (err) return res.send(err);
     return res.json({ success: true });
   })
 
-  // Data.save(err => {
-  //   if (err) return res.json({ success: false, error: err });
-  //   console.log("successful new food save")
-  //   return res.json({ success: true });
-  //
-  // });
 });
 
-
-
 // =======================================================
-
-
-// append /api for our http requests
 app.use("/api", router);
 
-// launch our backend into a port
 app.listen(API_PORT, () => console.log(`LISTENING ON PORT ${API_PORT}`));

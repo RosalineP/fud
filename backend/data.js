@@ -27,4 +27,4 @@ const FridgeSchema = new Schema(
   }
 );
 
-module.exports = mongoose.model("Data", FridgeSchema);
+module.exports = mongoose.model("Fridge", FridgeSchema);
