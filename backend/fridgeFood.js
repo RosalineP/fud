@@ -5,7 +5,8 @@ const FridgeSchema = new Schema(
   {
     name: String,
     expiry: String,
-    compartment: String
+    compartment: String,
+    icon: String
   }
 );
 

@@ -1,8 +1,6 @@
 import React, { Component } from 'react';
 import axios from "axios";
 
-import blueberry from './blueberries.svg'
-
 import Button from 'react-bootstrap/Button'
 import ButtonGroup from 'react-bootstrap/ButtonGroup'
 // import Popover from 'react-bootstrap/Popover'
@@ -17,6 +15,7 @@ import 'react-day-picker/lib/style.css';
 
 // import Select from 'react-select';
 import Select, { components } from 'react-select';
+import { optionsIcon } from './selectIconImgs';
 
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -29,17 +28,45 @@ library.add(faPlus, faEdit, faSquare, faCheckSquare, faCheck)
 class FridgeView extends Component{
   constructor(props){
     super(props);
-    this.state = {compartmentSelection: "fridge"};
+    this.state = {compartmentSelection: "fridge",
+                  foodData:"",
+                  infoRefreshed:false};
+    this.getFoods = this.getFoods.bind(this);
   }
 
 
+  componentDidMount(){
+    this.getFoods()
+  }
+  componentWillUnmount() {
+    console.log(this.state.foodData)
+  }
+
+  getFoods(){
+    var self = this;
+    fetch("http://localhost:3001/api/getFood")
+      .then(data => data.json()) // response type
+      .then(res => this.setState({foodData: res.data, infoRefreshed: true}))
+      .then(console.log("triggered"))
+  };
+
+
+  FoodTableWithData(){
+    if (!this.state.infoRefreshed){
+      return
+    }
+    return (<FoodTable foodData={this.state.foodData}
+                       compartmentSelection={this.state.compartmentSelection}/>);
+
+  }
 
   render(){
     return(
       <div className="fridgeCompartmentView">
         <FridgeButtonGroup selection={this.state.compartmentSelection}
-                           onClickButton={(newSelection) => this.setState({compartmentSelection: newSelection})}/>
-        <FoodTable compartmentSelection={this.state.compartmentSelection}/>
+                           onClickButton={(newSelection) => this.setState({compartmentSelection: newSelection})}
+                           refreshAfterAdd={this.getFoods}/>
+        {this.FoodTableWithData()}
       </div>
 
     );
@@ -70,7 +97,7 @@ class FridgeButtonGroup extends Component{
 
             <FontAwesomeIcon onClick={() => this.setState({isPopOverOpen: !this.state.isPopOverOpen})}
                              className="icon fridgeAddIcon" icon='plus' size="lg" />
-            {this.state.isPopOverOpen && <AddFood/>}
+            {this.state.isPopOverOpen && <AddFood refreshAfterAdd={this.props.refreshAfterAdd}/>}
 
           </ButtonGroup>);
   }
@@ -82,6 +109,7 @@ class AddFood extends Component{
     this.state = {nameField: "",
                   expiryField: "",
                   selectedOptionCompartment: null,
+                  selectedOptionIcon: null,
                   quantityField: "",
                   selectedOptionUnit: null,
                   priceField: "",
@@ -89,24 +117,29 @@ class AddFood extends Component{
                   nameFieldWarning: "",
                   expiryFieldWarning: "",
                   selectedOptionCompartmentWarning: null,
+                  selectedOptionIconWarning: null,
                   quantityFieldWarning: "",
                   priceFieldWarning: "",
                   anyWarnings: false
                 };
     this.handleChangeTextField = this.handleChangeTextField.bind(this);
+    this.addFoodToDB = this.addFoodToDB.bind(this);
   }
 
   addFoodToDB(e){
+    var self = this;
     if (this.validateAddFoodFields()){
       var self = this;
       axios.post("http://localhost:3001/api/addFood", {
         name: self.state.nameField,
         expiry: self.state.expiryField,
-        compartment: self.state.selectedOptionCompartment.value
+        compartment: self.state.selectedOptionCompartment.value,
+        icon: self.state.selectedOptionIcon.value
       })
       .then(function (response){
         console.log("card closes")
         console.log(response)
+        self.props.refreshAfterAdd()
       });
     }
   }
@@ -119,36 +152,40 @@ class AddFood extends Component{
     this.setState({ selectedOptionCompartment });
     // console.log(`Option selected:`, selectedOptionCompartment);
   }
+  handleChangeIcon = (selectedOptionIcon) => {
+    this.setState({ selectedOptionIcon });
+    // console.log(`Option selected:`, selectedOptionUnit);
+  }
   handleChangeUnits = (selectedOptionUnit) => {
     this.setState({ selectedOptionUnit });
     // console.log(`Option selected:`, selectedOptionUnit);
   }
 
 
-validateOneField(warningMessage, badComparator, fieldName){
-  let fieldWarningName = fieldName + "Warning";
-  if (this.state[fieldName] === badComparator){
-    this.setState({[fieldWarningName]: warningMessage});
-    return false;
-  } else if (this.state[fieldName] !== badComparator){
-    this.setState({ [fieldWarningName] : ""});
-    return true;
+  validateOneField(warningMessage, badComparator, fieldName){
+    let fieldWarningName = fieldName + "Warning";
+    if (this.state[fieldName] === badComparator){
+      this.setState({[fieldWarningName]: warningMessage});
+      return false;
+    } else if (this.state[fieldName] !== badComparator){
+      this.setState({ [fieldWarningName] : ""});
+      return true;
+    }
   }
-}
 
-validateOneOptionalField(warningMessage, fieldName, price){
-  let fieldWarningName = fieldName + "Warning";
-  if (this.state[fieldName] !== "" && isNaN(price)){
-    this.setState({[fieldWarningName]: warningMessage})
-    return false;
-  } else if (this.state[fieldName] !== "" && !isNaN(price)) {
-    this.setState({[fieldWarningName] : ""});
-    return true;
-  } else if (this.state[fieldName] === ""){
-    this.setState({[fieldWarningName] : ""});
-    return true;
+  validateOneOptionalField(warningMessage, fieldName, price){
+    let fieldWarningName = fieldName + "Warning";
+    if (this.state[fieldName] !== "" && isNaN(price)){
+      this.setState({[fieldWarningName]: warningMessage})
+      return false;
+    } else if (this.state[fieldName] !== "" && !isNaN(price)) {
+      this.setState({[fieldWarningName] : ""});
+      return true;
+    } else if (this.state[fieldName] === ""){
+      this.setState({[fieldWarningName] : ""});
+      return true;
+    }
   }
-}
 
   // returns true if inputs are valid
   validateAddFoodFields(){
@@ -158,16 +195,18 @@ validateOneOptionalField(warningMessage, fieldName, price){
     let nameField = this.validateOneField(emptinessWarning, "", "nameField");
     let expiryField = this.validateOneField("fuck gotta write this", "", "expiryField");
     let selectedOptionCompartment = this.validateOneField(emptinessWarning, null, "selectedOptionCompartment");
+    let selectedOptionIcon = this.validateOneField(emptinessWarning, null, "selectedOptionIcon");
 
     let priceField = this.validateOneOptionalField(notNumber, "priceField",  parseFloat(this.state.priceField))
     let quantityField = this.validateOneOptionalField(notNumber, "quantityField",  parseFloat(this.state.quantityField))
 
-    var validInputs = (nameField && expiryField && selectedOptionCompartment && priceField && quantityField)
+    var validInputs = (nameField && expiryField && selectedOptionCompartment && selectedOptionIcon && priceField && quantityField)
     return validInputs;
   }
 
   render(){
     const { selectedOptionCompartment } = this.state;
+    const { selectedOptionIcon } = this.state;
     const { selectedOptionUnit } = this.state;
 
     const optionsCompartment = [
@@ -175,6 +214,7 @@ validateOneOptionalField(warningMessage, fieldName, price){
       { value: 'fridge', label: 'fridge' },
       { value: 'pantry', label: 'pantry' }
     ];
+
 
     const optionsUnit = [
       { value: 'oz', label: 'oz' },
@@ -226,6 +266,27 @@ validateOneOptionalField(warningMessage, fieldName, price){
             options={optionsCompartment}
             styles={styleFocus}
             placeholder="compartment"
+            theme={(theme) => ({
+              ...theme,
+              borderRadius: 0,
+              colors: {
+              ...theme.colors,
+                primary25: '#A0C778',
+                primary: '#FED833',
+              },
+            })}
+          />
+        </span>
+
+        <span>
+          <div className="textFieldNotification"> {this.state.selectedOptionIconWarning} </div>
+          <Select
+            className="popOverField popOverSelect"
+            value={selectedOptionIcon}
+            onChange={this.handleChangeIcon}
+            options={optionsIcon}
+            styles={styleFocus}
+            placeholder="icon"
             theme={(theme) => ({
               ...theme,
               borderRadius: 0,
@@ -313,8 +374,9 @@ class FoodTable extends Component{
 
   getFoods(){
     fetch("http://localhost:3001/api/getFood")
-      .then(data => data.json()) // response type
+      .then(data => data.json())
       .then(res => this.setState({foodData: res.data}))
+      .then(this.setState({checkedFoods: new Set()}))
   };
 
   reportFoodChecked(id){
@@ -342,6 +404,7 @@ class FoodTable extends Component{
                             <FoodRow key={food._id}
                                      onClickReportId={() => this.reportFoodChecked(food._id)}
                                      isChecked={this.state.checkedFoods.has(food._id)}
+                                     iconCell={food.icon}
                                      nameCell={food.name}
                                      expiryCell={food.expiry}
                                      quantityCell=""
@@ -394,6 +457,7 @@ class FoodRow extends Component{
   constructor(props){
     super(props);
     this.state = {checked: this.props.isChecked,
+                  icon: "",
                   name: "",
                   expiry: "",
                   quantity: "",
@@ -417,10 +481,12 @@ class FoodRow extends Component{
       checkBox = <FontAwesomeIcon className="icon" icon={['far', 'square']} size="lg"/>;
     }
 
+    const images = require.context('./icons', true); 
+    // const bana = images('./banana.svg')
 
     return( <div className="ftRow">
               <div className="ftCell checkmarkCell" onClick={() => this.tickBox()}> {checkBox} </div>
-              <div className="ftCell iconCell"> <img className="foodIcon" src={blueberry} alt="food icon" /> </div>
+              <div className="ftCell iconCell"> <img className="foodIcon" src={ images(this.props.iconCell) } alt="food icon" /> </div>
               <div className="ftCell nameCell"> {this.props.nameCell} </div>
               <div className="ftCell expiryCell"> {this.props.expiryCell} </div>
               <div className="ftCell quantityCell"> {this.props.quantityCell} </div>

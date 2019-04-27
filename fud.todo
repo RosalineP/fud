@@ -24,6 +24,8 @@ On Fridge:
     ☐ make sure right action panel doesn't overlap with the food table
     ☐ adding food dropdown should default to last compartment added to
     ☐ uninstall unused packages
+    ☐ duplicate getFood
+    ☐ SERVICE OPTIONAL ITEMS
 
   Stretch:
   ☐ warnings on soon to expire food

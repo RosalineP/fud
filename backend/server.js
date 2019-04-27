@@ -34,12 +34,13 @@ app.use(logger("dev"));
 
 
 router.post("/addFood", (req, res) => {
-  const { name, expiry, compartment } = req.body;
+  const { name, expiry, compartment, icon } = req.body;
 
   var newFood = new FridgeFood({
     name: name,
     expiry: expiry,
-    compartment: compartment
+    compartment: compartment,
+    icon: icon
   });
 
   newFood.save(err => {

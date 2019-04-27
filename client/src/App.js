@@ -58,8 +58,8 @@ class SideNav extends Component{
 
           <Nav.Item className="navIcon">
             <Nav.Link onClick = {() => this.props.onClick("fridge")}
-                      className="sidebarNavLink">
-              <FontAwesomeIcon className="icon" icon={['fas', 'door-closed']} size="3x" />
+                      className="noPadding">
+              <img className="fridgeIcon" src={require('./icons/fridge.svg')} alt="fridge icon" />
             </Nav.Link>
           </Nav.Item>
 
