@@ -6,7 +6,10 @@ const FridgeSchema = new Schema(
     name: String,
     expiry: String,
     compartment: String,
-    icon: String
+    icon: String,
+    quantity: String,
+    unit: String,
+    price: String
   }
 );
 

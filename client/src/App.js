@@ -18,11 +18,11 @@ class App extends Component{
 
   setView(view){
     if (view === "shop"){
-      return <div> shop bitches </div>;
+      return <div className="placeholder"> <p>Füd's Shöp section is coming soon! </p> </div>;
     } else if (view === "fridge"){
       return <FridgeView/>;
     } else if (view === "recipe"){
-      return <div> recipe bitches </div>;
+      return <div className="placeholder"> Füd's Rëcipe section is coming soon! </div>;
     }
   }
 
@@ -58,8 +58,8 @@ class SideNav extends Component{
 
           <Nav.Item className="navIcon">
             <Nav.Link onClick = {() => this.props.onClick("fridge")}
-                      className="noPadding">
-              <img className="fridgeIcon" src={require('./icons/fridge.svg')} alt="fridge icon" />
+                      className="sidebarNavLink">
+              <FontAwesomeIcon className="icon" icon={['fas', 'door-closed']} size="3x" />
             </Nav.Link>
           </Nav.Item>
 

@@ -34,16 +34,24 @@ app.use(logger("dev"));
 
 
 router.post("/addFood", (req, res) => {
-  const { name, expiry, compartment, icon } = req.body;
+  var { name, expiry, compartment, icon, quantity, unit, price } = req.body;
+
+  if (unit === null){
+    var unit = "";
+  }
 
   var newFood = new FridgeFood({
     name: name,
     expiry: expiry,
     compartment: compartment,
-    icon: icon
+    icon: icon,
+    quantity: quantity,
+    unit: unit,
+    price: price
   });
 
   newFood.save(err => {
+    if (err) console.log(err);
     if (err) return res.json({ success: false, error: err });
     console.log("successful new food save")
     return res.json({ success: true });

@@ -9,19 +9,15 @@ import ButtonGroup from 'react-bootstrap/ButtonGroup'
 
 // import Popover, { ArrowContainer } from 'react-tiny-popover'
 
-// import DayPicker from 'react-day-picker';
-// import DayPickerInput from 'react-day-picker/DayPickerInput';
-import 'react-day-picker/lib/style.css';
-
 // import Select from 'react-select';
 import Select, { components } from 'react-select';
 import { optionsIcon } from './selectIconImgs';
 
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import {faPlus, faEdit, faCheck} from '@fortawesome/free-solid-svg-icons'
+import {faPlus, faEdit, faCheck, faChevronCircleRight, faChevronCircleLeft} from '@fortawesome/free-solid-svg-icons'
 import {faSquare, faCheckSquare} from '@fortawesome/free-regular-svg-icons'
-library.add(faPlus, faEdit, faSquare, faCheckSquare, faCheck)
+library.add(faPlus, faEdit, faSquare, faCheckSquare, faCheck, faChevronCircleRight, faChevronCircleLeft)
 
 
 
@@ -130,11 +126,23 @@ class AddFood extends Component{
     var self = this;
     if (this.validateAddFoodFields()){
       var self = this;
+      let unitValue;
+      if (self.state.selectedOptionUnit === null){
+        unitValue = "";
+      } else {
+        unitValue = self.state.selectedOptionUnit.value
+      }
+
+
       axios.post("http://localhost:3001/api/addFood", {
         name: self.state.nameField,
         expiry: self.state.expiryField,
         compartment: self.state.selectedOptionCompartment.value,
-        icon: self.state.selectedOptionIcon.value
+        icon: self.state.selectedOptionIcon.value,
+
+        quantity: self.state.quantityField.toString(),
+        unit: unitValue,
+        price: "$ " + parseFloat(self.state.priceField).toFixed(2).toString()
       })
       .then(function (response){
         console.log("card closes")
@@ -146,7 +154,6 @@ class AddFood extends Component{
 
   handleChangeTextField(event, stateName){
     this.setState({[stateName]: event.target.value})
-    // console.log(this.state);
   }
   handleChangeCompartment = (selectedOptionCompartment) => {
     this.setState({ selectedOptionCompartment });
@@ -172,7 +179,19 @@ class AddFood extends Component{
       return true;
     }
   }
-
+  validateDateField(){
+    var date_regrex = /^(0[1-9]|1[0-2])\/(0[1-9]|1\d|2\d|3[01])$/;
+    if (this.state.expiryField === ""){
+      this.setState({expiryFieldWarning: "required field"});
+      return false;
+    } else if (!date_regrex.test(this.state.expiryField)){
+      this.setState({expiryFieldWarning: "please enter a valid MM/DD date"});
+      return false
+    } else {
+      this.setState({expiryFieldWarning: ""});
+      return true;
+    }
+  }
   validateOneOptionalField(warningMessage, fieldName, price){
     let fieldWarningName = fieldName + "Warning";
     if (this.state[fieldName] !== "" && isNaN(price)){
@@ -193,7 +212,7 @@ class AddFood extends Component{
     let notNumber = "must be numerical"
 
     let nameField = this.validateOneField(emptinessWarning, "", "nameField");
-    let expiryField = this.validateOneField("fuck gotta write this", "", "expiryField");
+    let expiryField = this.validateDateField();
     let selectedOptionCompartment = this.validateOneField(emptinessWarning, null, "selectedOptionCompartment");
     let selectedOptionIcon = this.validateOneField(emptinessWarning, null, "selectedOptionIcon");
 
@@ -332,7 +351,7 @@ class AddFood extends Component{
         <TextField onChange={(e) => this.handleChangeTextField(e, "priceField")}
                    value={this.state.priceField}
                    className="popOverField"
-                   placeholder="price (optional)"
+                   placeholder="price"
                    warning={this.state.priceFieldWarning}/>
 
         <Button bsPrefix="popOverSubmitButton" onClick={(e) => this.addFoodToDB(e)}> submit </Button>
@@ -361,7 +380,8 @@ class FoodTable extends Component{
   constructor(props){
     super(props);
     this.state = {foodData: "",
-                  checkedFoods: new Set()};
+                  checkedFoods: new Set(),
+                  isCollapsed: false};
     this.getFoods = this.getFoods.bind(this);
   }
 
@@ -407,8 +427,10 @@ class FoodTable extends Component{
                                      iconCell={food.icon}
                                      nameCell={food.name}
                                      expiryCell={food.expiry}
-                                     quantityCell=""
-                                     unitCell=""/> : "")
+                                     quantityCell={food.quantity}
+                                     unitCell={food.unit}
+                                     priceCell={food.price}
+                                     isCollapsed={this.state.isCollapsed}/> : "")
     );
     return <div> {FoodRows} </div>;
   }
@@ -432,7 +454,15 @@ class FoodTable extends Component{
     }
   }
 
+  toggleCollapse(){
+    this.setState({isCollapsed: !this.state.isCollapsed})
+  }
+
   render(){
+
+    let collapsedColumn = {display: "none"};
+    let expandedColumn = {};
+
     return(
       <div className="fridgeTable noHighlight">
         <FoodActionsBar actionStyle={this.foodActionStyles()}
@@ -444,8 +474,10 @@ class FoodTable extends Component{
           <div className="ftCell iconCell"> &nbsp; </div>
           <div className="ftCell nameCell"> name </div>
           <div className="ftCell expiryCell"> expiry </div>
-          <div className="ftCell quantityCell"> quantity </div>
-          <div className="ftCell unitCell"> unit </div>
+          <div className="ftCell collapseButtonCell"> <FontAwesomeIcon className="icon clickable" onClick={() => this.toggleCollapse()} icon={this.state.isCollapsed ? 'chevron-circle-left' : 'chevron-circle-right'} size="lg"/> </div>
+          <div className="ftCell quantityCell" style={this.state.isCollapsed ? collapsedColumn : expandedColumn}> quantity </div>
+          <div className="ftCell unitCell"  style={this.state.isCollapsed ? collapsedColumn : expandedColumn}> unit </div>
+          <div className="ftCell priceCell" style={this.state.isCollapsed ? collapsedColumn : expandedColumn}> price </div>
         </div>
         {this.generateFoodRows()}
       </div>
@@ -473,6 +505,16 @@ class FoodRow extends Component{
 
   }
 
+  isCollaspedStyle(){
+    let collapsedColumn = {display: "none"};
+    let expandedColumn = {};
+    if (this.props.isCollapsed){
+      return collapsedColumn;
+    } else {
+      return expandedColumn;
+    }
+  }
+
   render(){
     let checkBox;
     if (this.state.checked){
@@ -481,16 +523,19 @@ class FoodRow extends Component{
       checkBox = <FontAwesomeIcon className="icon" icon={['far', 'square']} size="lg"/>;
     }
 
-    const images = require.context('./icons', true); 
-    // const bana = images('./banana.svg')
+    const images = require.context('./icons', true);
+
+
 
     return( <div className="ftRow">
               <div className="ftCell checkmarkCell" onClick={() => this.tickBox()}> {checkBox} </div>
               <div className="ftCell iconCell"> <img className="foodIcon" src={ images(this.props.iconCell) } alt="food icon" /> </div>
               <div className="ftCell nameCell"> {this.props.nameCell} </div>
               <div className="ftCell expiryCell"> {this.props.expiryCell} </div>
-              <div className="ftCell quantityCell"> {this.props.quantityCell} </div>
-              <div className="ftCell unitCell"> {this.props.unitCell} </div>
+              <div className="ftCell collapseButtonCell"> </div>
+              <div className="ftCell quantityCell" style={this.isCollaspedStyle()}> {this.props.quantityCell} </div>
+              <div className="ftCell unitCell" style={this.isCollaspedStyle()}> {this.props.unitCell} </div>
+              <div className="ftCell priceCell" style={this.isCollaspedStyle()}> {this.props.priceCell} </div>
             </div>
             );
   }

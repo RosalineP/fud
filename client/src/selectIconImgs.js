@@ -95,10 +95,10 @@ export const optionsIcon = [
   { value: './drinks/alcohol.svg', label: 'alcohol' },
   { value: './drinks/beer.svg', label: 'beer' },
   { value: './drinks/coffee.svg', label: 'coffee' },
-  { value: './drinks/hotchocolate.svg', label: 'hotchocolate' },
+  { value: './drinks/hotchocolate.svg', label: 'hot chocolate' },
   { value: './drinks/juice.svg', label: 'juice' },
   { value: './drinks/soda.svg', label: 'soda' },
   { value: './drinks/spirits.svg', label: 'spirits' },
   { value: './drinks/tea.svg', label: 'tea' },
-  { value: './drinks/wine.svg', label: 'wine' }  
+  { value: './drinks/wine.svg', label: 'wine' }
 ];

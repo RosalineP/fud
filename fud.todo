@@ -13,19 +13,27 @@ On App:
   ☐ have the text 'recipe, fridge, shop'
 
 On Fridge:
-  New:
-    ☐ check one or multiple food items. thing appears at bottom showing you options on what you can do..
-      or, it's greyed out until you check something
-    ☐ think of how to visually differentiate the optional ones
-    ☐ clean up selector code in addfood
-    ☐ make sure all functions aren't arrowy
-    ☐ make validation for dates work :(
+  Function:
+    ✔ check one or multiple food items. thing appears at bottom showing you options on what you can do.. or, it's greyed out until you check something @done(2019-04-26 16:35) @project(On Fridge / New)
+    ✔ think of how to visually differentiate the optional ones @done(2019-04-26 16:35) @project(On Fridge / New)
     ☐ make foodpopover close on outside click: https://medium.com/@pitipatdop/little-neat-trick-to-capture-click-outside-react-component-5604830beb7f
     ☐ make sure right action panel doesn't overlap with the food table
     ☐ adding food dropdown should default to last compartment added to
-    ☐ uninstall unused packages
-    ☐ duplicate getFood
-    ☐ SERVICE OPTIONAL ITEMS
+    ✔ uninstall unused packages @done(2019-04-26 23:06) @project(On Fridge / Function)
+
+    Style:
+    ☐ clean up selector code in addfood
+    ☐ make sure all functions aren't arrowy
+    Critical:
+    ✔ SERVICE OPTIONAL ITEMS @done(2019-04-26 21:21) @project(On Fridge / Function)
+    ☐ make add button reactive
+    ☐ launch
+    ✔ date validation @done(2019-04-26 22:59) @project(On Fridge / Function)
+    ✔ format prices? @done(2019-04-26 22:20) @project(On Fridge / Function)
+    ✔ close off other tabs @done(2019-04-26 20:24) @project(On Fridge / Function)
+
+
+
 
   Stretch:
   ☐ warnings on soon to expire food
@@ -35,3 +43,9 @@ On Fridge:
       ☐
   Fridge UI:
       ☐
+
+
+App, 60
+            <Nav.Link onClick = {() => this.props.onClick("fridge")}
+                      className="noPadding">
+              <img className="fridgeIcon" src={require('./icons/fridge.svg')} alt="fridge icon" />

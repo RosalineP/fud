@@ -120,6 +120,7 @@ body {
 .fridgeAddIcon{
   margin-top: 10px;
   margin-left: 10px;
+  cursor:pointer;
 }
 
 /*   Popover Content   */
@@ -236,7 +237,6 @@ input, select, textarea{
   flex-grow: 1;
   width: 100%;
   overflow: hidden;
-  /* text-align: center; */
   /* border: 1px solid black; */
 }
 
@@ -246,25 +246,36 @@ input, select, textarea{
 }
 
 .checkmarkCell{
-  width: 3em;
+  width: 8%;
+  cursor:pointer;
 }
 .iconCell{
-  width: 30%;
-  text-align: center;
+  width: 12%;
+  text-align: left;
   color: #ADA842;
 }
 .nameCell{
-  width: 45%;
+  width: 22%;
 }
 .expiryCell{
-  width: 25%;
+  width: 15%;
+}
+.collapseButtonCell{
+  width: 3%;
+}
+.clickable{
+  cursor: pointer;
 }
 .quantityCell{
-  width: 35%;
+  width: 8%;
   text-align: center;
 }
 .unitCell{
-  width: 30%;
+  width: 20%;
+  text-align: center;
+}
+.priceCell{
+  width: 10%;
   text-align: center;
 }
 
@@ -291,4 +302,13 @@ input, select, textarea{
   justify-content: center;
   margin: 1em 0 1em 0;
 }
-/* ==================              ================== */
+
+/* ==================     temp       ================== */
+.placeholder{
+  color: #a4de02;
+  font-size: 4em;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 80vh;
+}
