@@ -4,7 +4,6 @@ fn cmd d
 Super stretch:
   ☐ use okta for login authentication
 
-
 UI:
   ☐ css styling should be camelcased
 
@@ -19,6 +18,8 @@ On Fridge:
     ☐ make foodpopover close on outside click: https://medium.com/@pitipatdop/little-neat-trick-to-capture-click-outside-react-component-5604830beb7f
     ☐ make sure right action panel doesn't overlap with the food table
     ☐ adding food dropdown should default to last compartment added to
+    ☐ expiry date indicator
+    ☐ sort by column?
     ✔ uninstall unused packages @done(2019-04-26 23:06) @project(On Fridge / Function)
 
     Style:
@@ -27,6 +28,7 @@ On Fridge:
     Critical:
     ✔ SERVICE OPTIONAL ITEMS @done(2019-04-26 21:21) @project(On Fridge / Function)
     ☐ make add button reactive
+    ☐ write or delete edit button
     ☐ launch
     ✔ date validation @done(2019-04-26 22:59) @project(On Fridge / Function)
     ✔ format prices? @done(2019-04-26 22:20) @project(On Fridge / Function)

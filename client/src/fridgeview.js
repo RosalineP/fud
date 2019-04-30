@@ -10,7 +10,7 @@ import ButtonGroup from 'react-bootstrap/ButtonGroup'
 // import Popover, { ArrowContainer } from 'react-tiny-popover'
 
 // import Select from 'react-select';
-import Select, { components } from 'react-select';
+import Select from 'react-select';
 import { optionsIcon } from './selectIconImgs';
 
 import { library } from '@fortawesome/fontawesome-svg-core'
@@ -32,14 +32,14 @@ class FridgeView extends Component{
 
 
   componentDidMount(){
-    this.getFoods()
+    // static
+    // this.getFoods()
   }
   componentWillUnmount() {
     console.log(this.state.foodData)
   }
 
   getFoods(){
-    var self = this;
     fetch("http://localhost:3001/api/getFood")
       .then(data => data.json()) // response type
       .then(res => this.setState({foodData: res.data, infoRefreshed: true}))
@@ -125,7 +125,7 @@ class AddFood extends Component{
   addFoodToDB(e){
     var self = this;
     if (this.validateAddFoodFields()){
-      var self = this;
+      // var self = this;
       let unitValue;
       if (self.state.selectedOptionUnit === null){
         unitValue = "";
@@ -133,6 +133,12 @@ class AddFood extends Component{
         unitValue = self.state.selectedOptionUnit.value
       }
 
+      let priceValue;
+      if (self.state.priceField === ""){
+        priceValue = "";
+      } else {
+        priceValue = "$ " + parseFloat(self.state.priceField).toFixed(2).toString();
+      }
 
       axios.post("http://localhost:3001/api/addFood", {
         name: self.state.nameField,
@@ -142,7 +148,7 @@ class AddFood extends Component{
 
         quantity: self.state.quantityField.toString(),
         unit: unitValue,
-        price: "$ " + parseFloat(self.state.priceField).toFixed(2).toString()
+        price: priceValue
       })
       .then(function (response){
         console.log("card closes")
@@ -499,7 +505,6 @@ class FoodRow extends Component{
     }
 
   tickBox(){
-    let currentCheckBox = this.state.checked;
     this.props.onClickReportId()
     this.setState({checked: !this.state.checked})
 
