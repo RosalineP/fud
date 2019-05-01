@@ -3,13 +3,7 @@ import axios from "axios";
 
 import Button from 'react-bootstrap/Button'
 import ButtonGroup from 'react-bootstrap/ButtonGroup'
-// import Popover from 'react-bootstrap/Popover'
-// import OverlayTrigger from 'react-bootstrap/OverlayTrigger'
-// import Form from 'react-bootstrap/Form'
 
-// import Popover, { ArrowContainer } from 'react-tiny-popover'
-
-// import Select from 'react-select';
 import Select from 'react-select';
 import { optionsIcon } from './selectIconImgs';
 
@@ -392,7 +386,8 @@ class FoodTable extends Component{
   }
 
   componentDidMount(){
-    this.getFoods();
+    // static
+    // this.getFoods();
     // console.log("mounting")
   }
   componentWillUnmount() {

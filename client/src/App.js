@@ -58,8 +58,8 @@ class SideNav extends Component{
 
           <Nav.Item className="navIcon">
             <Nav.Link onClick = {() => this.props.onClick("fridge")}
-                      className="sidebarNavLink">
-              <FontAwesomeIcon className="icon" icon={['fas', 'door-closed']} size="3x" />
+                      className="noPadding">
+              <img className="fridgeIcon" src={require('./fridge-green.svg')} alt="fridge icon" />
             </Nav.Link>
           </Nav.Item>
 
@@ -67,6 +67,7 @@ class SideNav extends Component{
             <Nav.Link onClick = {() => this.props.onClick("recipe")}
                       eventKey="in_progress"
                       className="sidebarNavLink">
+
               <FontAwesomeIcon className="icon" icon={['fas', 'utensils']} size="3x" />
             </Nav.Link>
           </Nav.Item>
