@@ -3,9 +3,11 @@ fn cmd d
 
 Super stretch:
   ☐ use okta for login authentication
+  ☐ getting auto-categories for foods entered
 
-UI:
-  ☐ css styling should be camelcased
+
+UI (reminder)
+    css styling should be camelcased
 
 On App:
   ☐ think about how to indicate which tab you're on as well as styling for selecting others
@@ -19,16 +21,17 @@ On Fridge:
     ☐ make sure right action panel doesn't overlap with the food table
     ☐ adding food dropdown should default to last compartment added to
     ☐ expiry date indicator
-    ☐ sort by column?
+    ☐ sort by columns?
+    ☐ write edit button
+
     ✔ uninstall unused packages @done(2019-04-26 23:06) @project(On Fridge / Function)
 
     Style:
-    ☐ clean up selector code in addfood
+    ✔ clean up selector code in addfood @done(2019-05-03 21:06) @project(On Fridge / Function)
     ☐ make sure all functions aren't arrowy
     Critical:
     ✔ SERVICE OPTIONAL ITEMS @done(2019-04-26 21:21) @project(On Fridge / Function)
-    ☐ make add button reactive
-    ☐ write or delete edit button
+    ✔ make add button reactive @done(2019-05-03 20:51) @project(On Fridge / Function)
     ☐ launch
     ✔ date validation @done(2019-04-26 22:59) @project(On Fridge / Function)
     ✔ format prices? @done(2019-04-26 22:20) @project(On Fridge / Function)
@@ -37,14 +40,9 @@ On Fridge:
 
 
 
-  Stretch:
-  ☐ warnings on soon to expire food
-  ☐ getting auto-categories for foods entered
-  ☐ getting images in selector in addfood
-  Cleaning code style:
-      ☐
-  Fridge UI:
-      ☐
+
+FridgeView, 544
+        // <div className="foodAction" style={this.props.actionStyle}> edit </div>
 
 
 App, 60

@@ -1,19 +1,36 @@
 {
-  "name": "fud_app",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "name": "heroku-cra-node",
+  "version": "3.0.0",
+  "description": "How to use create-react-app with a custom Node API on Heroku",
+  "engines": {
+    "node": "10.x"
+  },
   "scripts": {
-    "start": "cd client && npm start",
-    "heroku-postbuild": "cd client && npm install && npm run build"
+    "start": "node server",
+    "build": "cd react-ui/ && npm install && npm install --only=dev --no-shrinkwrap && npm run build"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "cacheDirectories": [
+    "node_modules",
+    "react-ui/node_modules"
+  ],
   "dependencies": {
-    "concurrently": "^4.1.0"
+    "body-parser": "^1.19.0",
+    "cors": "^2.8.5",
+    "express": "^4.16.4",
+    "mongodb": "^3.2.3",
+    "mongoose": "^5.5.5",
+    "morgan": "^1.9.1"
   },
-  "devDependencies": {
-    "nodemon": "^1.18.10"
-  }
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mars/heroku-cra-node.git"
+  },
+  "keywords": [
+    "node",
+    "heroku",
+    "create-react-app",
+    "react"
+  ],
+  "license": "MIT",
+  "devDependencies": {}
 }

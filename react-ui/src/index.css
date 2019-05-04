@@ -1,0 +1,320 @@
+body {
+  margin: 0;
+  padding: 0;
+}
+
+.noHighlight {
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+.greenButton{
+  background: white;
+  color: #a4de02;
+  border: 2px solid #a4de02;
+  padding: 5px 10px;
+  font-size: 1.2em;
+}
+.greenButton:focus {
+  outline: none;
+}
+
+/* ==================   Sidepanel   ================== */
+
+.umlaut{
+  font-size: 3.5em;
+  color: #a4de02;
+  text-align: center;
+  border-bottom: medium dotted #a4de02;
+}
+
+.leftPanel{
+  width: 6em;
+  height:100vh;
+  float: left;
+}
+
+.navBar{
+  position: fixed;
+  display: flex;
+  flex-direction: column;
+  float: left;
+  width: 6em;
+  height: 100vh;
+  border-right: medium dashed #a4de02;
+}
+
+.navIcon{
+  height: 14vh;
+  width: 100%;
+  text-align: center;
+  border-color: black;
+  /* border-radius: 75px; */
+  /* border-style: solid; */
+}
+
+.icon{
+  color: #a4de02;
+  padding: 0;
+  border-color: red;
+  /* border-style: solid; */
+}
+
+.fridgeIcon{
+  /* height: 4em; */
+  width:  4.5em;
+  /* border-style: solid; */
+  background-image: url('fridge-green.svg');
+
+}
+
+.noPadding{
+  padding: 0 !important;
+}
+
+.sidebarNavLink{
+  margin-top: 2vh;
+  border-color: purple;
+  /* border-style: solid; */
+}
+
+.navIcon:hover{
+  background-color: #a4de02;
+}
+.navIcon:hover .icon{
+  color: white;
+}
+
+.loginout{
+  border-radius: 10px;
+  margin: 0 5px 0 7px;
+  font-size: 1.1em;
+  position: absolute;
+  bottom: 1em;
+}
+.loginout:hover{
+  background-color: #a4de02;
+  color: white;
+}
+
+
+/* ==================   Fridge   ================== */
+/*   Button Group Nav   */
+.fridgeCompartmentView{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+
+.fridgeButtonGroup{
+  margin: 5vh auto 0 auto;
+}
+
+.fridgeBtnGroupLeft   { border-radius: 10px 0px 0px 10px; }
+.fridgeBtnGroupMiddle { border-width:  2px 0px 2px 0px; }
+.fridgeBtnGroupRight  { border-radius: 0px 10px 10px 0px; }
+
+.fridgeAddIcon{
+  margin-top: 10px;
+  margin-left: 10px;
+  cursor:pointer;
+}
+
+/*   Popover Content   */
+.popOverContent{
+  width: 15em;
+  position:absolute;
+  z-index: 10;
+  top:-15px;
+  right:-255px;
+  visibility: visible;
+  border: 3px solid #a4de02;
+  border-radius: 10px;
+  padding-top: 1em;
+  padding-bottom: 1em;
+  background-color: white;
+
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+}
+
+.textFieldNotification{
+  /* margin-top: 0.5em; */
+  font-size: 0.7em;
+  color: #FF7C0A;
+  height: 1.5em;
+}
+.popOverField{
+  /* margin-top: 0.5em; */
+  margin-bottom: 0.2em;
+  border: 2px solid #a4de02;
+  border-radius: 5px;
+  height: 44px;
+  width: 175px;
+}
+.popOverField:focus {
+  outline: none;
+}
+
+input, select, textarea{
+    color: #808080;
+    text-indent: 5px;
+}
+
+.popOverSelect{
+  width: 175px;
+  height: 43px;
+}
+
+.optional{
+  margin-top: 1em;
+  color: #a4de02;
+  font-size: 0.7em;
+}
+
+.popOverQuantitiesText{
+  width: 82px;
+  float: left;
+  margin-right: 7px;
+  /* margin: 0 5px 0 0; */
+  /* margin-top: 0.5em; */
+}
+
+.popOverUnitSelect{
+  width: 87px;
+  float: right;
+}
+
+.popOverSubmitButton{
+  background: white;
+  color: #FED833;
+  border: 2px solid #FED833;
+  padding: 5px 10px;
+  font-size: 1.2em;
+  border-radius: 10px;
+  margin-top: 1em;
+}
+.popOverSubmitButton:hover{
+  background: #FED833;
+  color: white;
+}
+.popOverSubmitButton:focus {
+  outline: none;
+}
+
+/*   Food Table   */
+.fridgeTable{
+  margin-top: 4vh;
+  /* margin-right: 4em; */
+  width: 75vw;
+  /* border: 1px solid black; */
+
+}
+
+.ftHeader{
+  margin-top: 6vh;
+  border-bottom: 5px dashed #FED833;
+  font-weight: bold;
+  padding-bottom: 0.5em;
+  color: #577504;
+}
+
+.ftRow{
+  display: flex;
+  align-items: center;
+  width: 75vw;
+  margin-top: 0.5em;
+  margin-bottom: 0.5em;
+  color: #92c10f;
+}
+
+.ftCell{
+  box-sizing: border-box;
+  flex-grow: 1;
+  width: 100%;
+  overflow: hidden;
+  /* border: 1px solid black; */
+}
+
+.foodIcon{
+  height: 2.5em;
+  width:  2.5em;
+}
+
+.checkmarkCell{
+  width: 8%;
+  cursor:pointer;
+}
+.iconCell{
+  width: 12%;
+  min-width: 2.8em;
+  text-align: left;
+  color: #ADA842;
+}
+.nameCell{
+  width: 22%;
+}
+.expiryCell{
+  width: 15%;
+}
+.collapseButtonCell{
+  width: 3%;
+  min-width: 1.5em;
+}
+.clickable{
+  cursor: pointer;
+}
+.quantityCell{
+  width: 8%;
+  min-width: 4em;
+  text-align: center;
+}
+.unitCell{
+  width: 20%;
+  text-align: center;
+}
+.priceCell{
+  width: 10%;
+  min-width: 2.5em;
+  text-align: center;
+}
+
+/*   Food Table   */
+.foodActionsBar{
+  display: flex;
+  flex-direction: column;
+  float: right;
+  position:fixed;
+  z-index: 5;
+  top: 5em;
+  right: 1.5em;
+}
+
+
+.foodAction{
+  height: 3.9em;
+  width: 3.9em;
+  /* color: #C0C5CE; */
+  /* border: 3px dotted #C0C5CE; */
+  border-radius: 4em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 1em 0 1em 0;
+}
+
+/* ==================     temp       ================== */
+.placeholder{
+  color: #a4de02;
+  font-size: 70px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 80vh;
+}
